@@ -1,6 +1,6 @@
 # DEWR Workforce Event Simulation
 
-Synthetic workforce and labour-market event producer refactored from the tracking simulation base.
+Synthetic workforce and labour-market event producer for the DEWR Workforce Pathways Intelligence prototype.
 
 ## Event stream
 
@@ -22,3 +22,6 @@ pnpm test
 ```
 
 Use `POST /simulation/tick` to publish one event batch, or `POST /simulation/start` to run a loop.
+
+Shared DTO contracts are kept in `src/shared/contracts` so the event producer, tests and future
+API clients use the same DEWR workforce vocabulary.

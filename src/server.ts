@@ -8,7 +8,7 @@ async function start() {
   await initializeSimulation();
 
   app.listen(port, () => {
-    console.log(`Tracking Demo simulation running on http://localhost:${port}`);
+    console.log(`DEWR workforce event simulation running on http://localhost:${port}`);
   });
 }
 
