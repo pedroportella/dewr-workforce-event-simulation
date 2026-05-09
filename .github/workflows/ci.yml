@@ -30,9 +30,10 @@ jobs:
           node --version
           npm --version
 
-      - name: Install pnpm
+      - name: Setup pnpm via Corepack
         run: |
-          npm install -g pnpm@latest
+          corepack enable
+          corepack prepare pnpm@latest --activate
           pnpm --version
 
       - name: Install dependencies
