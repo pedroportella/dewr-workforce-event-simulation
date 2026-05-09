@@ -27,12 +27,11 @@ jobs:
       - name: Verify runtime
         run: |
           node --version
-          corepack --version
+          npm --version
 
-      - name: Prepare pnpm
+      - name: Install pnpm
         run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
+          npm install -g pnpm@latest
           pnpm --version
 
       - name: Install dependencies
