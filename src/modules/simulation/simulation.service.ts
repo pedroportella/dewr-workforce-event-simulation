@@ -69,12 +69,34 @@ export function buildSyntheticEvents(batchSize = state.eventBatchSize): Workforc
   });
 }
 
+async function isTargetServiceAvailable(): Promise<boolean> {
+  try {
+    const response = await fetch(WORKFORCE_TARGET_URL, {
+      method: 'HEAD'
+    });
+
+    return response.ok || response.status === 405;
+  } catch (error) {
+    console.warn(`Target service unavailable at ${WORKFORCE_TARGET_URL}:`, error);
+    return false;
+  }
+}
+
 async function publishEvents(events: WorkforceEventRequest[]) {
-  await fetch(WORKFORCE_TARGET_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ events })
-  });
+  if (!(await isTargetServiceAvailable())) {
+    console.warn(`Skipping event publish because ${WORKFORCE_TARGET_URL} is not available.`);
+    return;
+  }
+
+  try {
+    await fetch(WORKFORCE_TARGET_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ events })
+    });
+  } catch (error) {
+    console.warn(`Failed to publish events to ${WORKFORCE_TARGET_URL}:`, error);
+  }
 }
 
 function snapshot(): SimulationSnapshotDto {
@@ -99,7 +121,15 @@ function stopTimer() {
 export async function initializeSimulation(): Promise<void> {
   latestEvents = buildSyntheticEvents();
   state.updatedAtUtc = new Date().toISOString();
-  if (AUTO_START_SIMULATION) startSimulationLoop();
+
+  if (AUTO_START_SIMULATION) {
+    if (!(await isTargetServiceAvailable())) {
+      throw new Error(
+        `dewr-workforce-intelligence-services must be running and reachable at ${WORKFORCE_TARGET_URL}`
+      );
+    }
+    startSimulationLoop();
+  }
 }
 
 export async function getSimulationSnapshot(): Promise<SimulationSnapshotDto> {
