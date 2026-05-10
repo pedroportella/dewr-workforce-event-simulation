@@ -11,7 +11,7 @@ const DEFAULT_EVENT_BATCH_SIZE = Math.max(1, Number(process.env.SIMULATION_EVENT
 const AUTO_START_SIMULATION = `${process.env.SIMULATION_AUTOSTART ?? 'false'}` === 'true';
 const WORKFORCE_TARGET_URL = (
   process.env.WORKFORCE_TARGET_URL ||
-  'http://localhost:4000/api/v1/workforce-intelligence/events'
+  'http://127.0.0.1:4000/api/v1/workforce-intelligence/events'
 ).replace(/\/$/, '');
 
 const regions = [
